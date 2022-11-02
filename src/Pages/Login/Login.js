@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import img from '../../assets/images/login/OTP-Authentication-Security.svg'
 import { AuthContext } from '../../context/AuthProvider/AuthProvider';
 
 const Login = () => {
+  const [loginError,setLoginError,user] = useState(null)
   const {loginWithEmail} = useContext(AuthContext);
     const handleLogin = (event) =>{
         event.preventDefault();
@@ -12,7 +13,16 @@ const Login = () => {
         const password = form.password.value;
         loginWithEmail(email, password)
         .then(result=> console.log(result.user))
-        .catch(error => console.error(error))
+        .catch(error => {
+          if(error){
+
+            setLoginError(true)
+            console.log(error);
+          } else{
+            setLoginError(false)
+            
+          }
+        })
 
 
 
@@ -46,6 +56,9 @@ const Login = () => {
         </div>
         <div className="form-control mt-6">
           <input type="submit" className="btn btn-primary" value="Login" />
+          {
+            loginError? <p className='text-xl font-semibold text-error'>Invalid Email/ Password</p> : <p className='text-xl font-semibold text-success' ></p>
+          }
         </div>
       <p className='text-center'>New to Car Doctor? <Link className='text-lg font-semibold' to={'/signup'} >Sign Up</Link>  </p>
       </form>
